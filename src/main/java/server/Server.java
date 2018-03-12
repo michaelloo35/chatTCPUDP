@@ -28,6 +28,8 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
              DatagramSocket datagramSocket = new DatagramSocket(PORT_NUMBER)) {
 
+            startUDPService(datagramSocket);
+
             while (true) {
 
                 ClientService cs = new ClientService(serverSocket.accept(), clients, clientCounter);
@@ -49,6 +51,11 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void startUDPService(DatagramSocket datagramSocket) {
+        UDPService udpService = new UDPService(datagramSocket, clients);
+        new Thread(udpService).start();
     }
 
 }
