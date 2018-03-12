@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class TCPListenerThread implements Runnable {
+public class TCPListener implements Runnable {
 
     private final BufferedReader in;
     private final Socket socket;
 
-    public TCPListenerThread(Socket socket) throws IOException {
+    public TCPListener(Socket socket) throws IOException {
         this.socket = socket;
         this.in = setupIn(socket);
     }
@@ -24,11 +24,8 @@ public class TCPListenerThread implements Runnable {
             try {
                 String response = in.readLine();
 
-                // if error is detected then close socket and exit listening loop
-                if (response == null) {
-                    socket.close();
-                    break;
-                }
+                // in case error is detected then close socket and exit listening loop
+                if (hasError(response)) break;
 
                 System.out.println(response);
 
@@ -36,6 +33,14 @@ public class TCPListenerThread implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean hasError(String response) throws IOException {
+        if (response == null) {
+            socket.close();
+            return true;
+        }
+        return false;
     }
 
     private BufferedReader setupIn(Socket socket) throws IOException {

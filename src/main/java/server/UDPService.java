@@ -24,13 +24,15 @@ public class UDPService implements Runnable {
 
         try {
             while (true) {
+
+                // flush buffer
                 Arrays.fill(receiveBuffer, (byte) 0);
 
                 // wait for packet
                 DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                 socket.receive(receivePacket);
 
-                // load message and broadcast it
+                // convert message and broadcast it
                 String msg = new String(receivePacket.getData());
                 broadcastMessage(msg, receivePacket.getAddress(), receivePacket.getPort());
             }
@@ -43,12 +45,10 @@ public class UDPService implements Runnable {
         byte[] sendBuffer = msg.getBytes();
 
         for (ClientService cs : clients) {
-            if (cs.getPort() != senderPort && cs.getAddress() != senderAddress) {
 
-                socket.send(
-                        new DatagramPacket(sendBuffer, sendBuffer.length, cs.getAddress(), cs.getPort()));
-
-            }
+            // don't send to sender
+            if (cs.getPort() != senderPort && cs.getAddress() != senderAddress)
+                socket.send(new DatagramPacket(sendBuffer, sendBuffer.length, cs.getAddress(), cs.getPort()));
         }
     }
 }

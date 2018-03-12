@@ -22,7 +22,7 @@ public class TCPWriter {
     /**
      * Captures message from standard input and transfers through TCP connection
      */
-    public void writeFromSTDIN() {
+    public void sendMessageFromSTDIN() {
         String msg = scanner.nextLine();
         out.println(msg);
     }

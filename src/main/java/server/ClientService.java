@@ -33,11 +33,11 @@ public class ClientService implements Runnable {
 
             while (true) {
 
+                // wait for message
                 String msg = in.readLine();
 
                 // break connection if error is detected
-                if (msg == null)
-                    break;
+                if (hasError(msg)) break;
 
                 msg = "client" + id + " says " + msg;
 
@@ -49,6 +49,12 @@ public class ClientService implements Runnable {
             e.printStackTrace();
         }
 
+    }
+
+    private boolean hasError(String msg) {
+        if (msg == null)
+            return true;
+        return false;
     }
 
     private void broadcastMessage(String message) {
@@ -69,10 +75,6 @@ public class ClientService implements Runnable {
 
     public PrintWriter getOut() {
         return out;
-    }
-
-    public BufferedReader getIn() {
-        return in;
     }
 
     public int getPort() {

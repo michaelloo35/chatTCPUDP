@@ -36,10 +36,11 @@ public class Server {
 
                 if (clientCounter < MAX_CLIENTS) {
 
-                    clientCounter++;
                     new Thread(cs).start();
 
+                    clientCounter++;
                     clients.add(cs);
+
                     System.out.println("client: " + clientCounter + " connected");
 
                 } else {

@@ -5,11 +5,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.Arrays;
 
-public class UDPListenerThread implements Runnable {
+public class UDPListener implements Runnable {
 
     private final DatagramSocket socket;
 
-    public UDPListenerThread(DatagramSocket socket) {
+    public UDPListener(DatagramSocket socket) {
         this.socket = socket;
     }
 
@@ -20,11 +20,15 @@ public class UDPListenerThread implements Runnable {
 
         try {
             while (true) {
+
+                // flush buffer
                 Arrays.fill(receiveBuffer, (byte) 0);
 
+                // wait for message
                 DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                 socket.receive(receivePacket);
 
+                // print message
                 System.out.println(new String(receivePacket.getData()));
             }
         } catch (IOException e) {

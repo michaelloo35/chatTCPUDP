@@ -25,21 +25,22 @@ public class Client {
         try (Socket tcpSocket = new Socket(SERVER_ADDRESS, SERVER_PORT);
              DatagramSocket datagramSocket = new DatagramSocket(tcpSocket.getLocalPort())) {
 
-            // TCP in & out
-            new Thread(new TCPListenerThread(tcpSocket)).start();
+            // TCP in & out setup
+            new Thread(new TCPListener(tcpSocket)).start();
             TCPWriter tcpWriter = new TCPWriter(tcpSocket);
 
-            // UDP in & out
-            new Thread(new UDPListenerThread(datagramSocket)).start();
+            // UDP in & out setup
+            new Thread(new UDPListener(datagramSocket)).start();
             UDPWriter udpWriter = new UDPWriter(datagramSocket);
 
+            // MESSAGE LOOP
             while (true) {
 
                 System.out.println("Choose message type:\n'T' - TCP\n'U' - UDP ASCII art");
 
                 switch (scanner.nextLine()) {
                     case "T":
-                        tcpWriter.writeFromSTDIN();
+                        tcpWriter.sendMessageFromSTDIN();
                         break;
 
                     case "U":
@@ -48,10 +49,9 @@ public class Client {
 
                     default:
                         System.out.println("Incorrect type");
-
                 }
-
             }
+
         } catch (SocketException e) {
             System.out.println("Error, disconnected");
         }
