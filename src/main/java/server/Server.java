@@ -10,7 +10,7 @@ public class Server {
 
 
     private static final int PORT_NUMBER = 12345;
-    private static final int MAX_CLIENTS = 0;
+    private static final int MAX_CLIENTS = 2;
     private static final String CLIENTS_LIMIT_ERROR_MSG = "clients limit exceeded";
 
     private final List<ClientService> clients;
@@ -33,7 +33,6 @@ public class Server {
             while (true) {
 
                 ClientService cs = new ClientService(serverSocket.accept(), clients, clientCounter);
-
 
                 if (clientCounter < MAX_CLIENTS) {
 

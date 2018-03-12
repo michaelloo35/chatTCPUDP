@@ -26,9 +26,11 @@ public class UDPService implements Runnable {
             while (true) {
                 Arrays.fill(receiveBuffer, (byte) 0);
 
+                // wait for packet
                 DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                 socket.receive(receivePacket);
 
+                // load message and broadcast it
                 String msg = new String(receivePacket.getData());
                 broadcastMessage(msg, receivePacket.getAddress(), receivePacket.getPort());
             }

@@ -1,15 +1,20 @@
 package client;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Scanner;
 
 public class Client {
 
-    private final String host = "localhost";
-    private final int PORT_NUMBER = 12345;
+    private final String SERVER_ADDRESS = "localhost";
+    private final int SERVER_PORT = 12345;
+    private final Scanner scanner;
 
     public Client() {
+        scanner = new Scanner(System.in);
     }
 
 
@@ -17,19 +22,37 @@ public class Client {
 
         System.out.println("JAVA TCP CLIENT");
 
-        try (Socket socket = new Socket(host, PORT_NUMBER)) {
+        try (Socket tcpSocket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+             DatagramSocket datagramSocket = new DatagramSocket(tcpSocket.getLocalPort())) {
 
-            // in & out
-            new Thread(new TCPListenerThread(socket)).start();
-            TCPWriter writer = new TCPWriter(socket);
+            // TCP in & out
+            new Thread(new TCPListenerThread(tcpSocket)).start();
+            TCPWriter tcpWriter = new TCPWriter(tcpSocket);
 
-            // send msg, read response
+            // UDP in & out
+            new Thread(new UDPListenerThread(datagramSocket)).start();
+            UDPWriter udpWriter = new UDPWriter(datagramSocket);
+
             while (true) {
-                // exit loop if error occured and socket is closed
-                writer.writeFromSTDIN();
+
+                System.out.println("Choose message type:\n'T' - TCP\n'U' - UDP ASCII art");
+
+                switch (scanner.nextLine()) {
+                    case "T":
+                        tcpWriter.writeFromSTDIN();
+                        break;
+
+                    case "U":
+                        udpWriter.sendRandomArt(InetAddress.getByName(SERVER_ADDRESS), SERVER_PORT);
+                        break;
+
+                    default:
+                        System.out.println("Incorrect type");
+
+                }
+
             }
-        }
-        catch(SocketException e){
+        } catch (SocketException e) {
             System.out.println("Error, disconnected");
         }
 
