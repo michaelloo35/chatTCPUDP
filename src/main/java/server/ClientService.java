@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ClientService implements Runnable {
                 String msg = in.readLine();
 
                 // break connection if error is detected
-                if(msg == null)
+                if (msg == null)
                     break;
 
                 msg = "client" + id + " says " + msg;
@@ -72,6 +73,14 @@ public class ClientService implements Runnable {
 
     public BufferedReader getIn() {
         return in;
+    }
+
+    public int getPort() {
+        return socket.getPort();
+    }
+
+    public InetAddress getAddress() {
+        return socket.getInetAddress();
     }
 
     private BufferedReader setupIn() throws IOException {

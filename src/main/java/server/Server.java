@@ -23,7 +23,7 @@ public class Server {
 
     public void start() {
 
-        System.out.println("JAVA TCP SERVER");
+        System.out.println("JAVA SERVER");
 
         try (ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
              DatagramSocket datagramSocket = new DatagramSocket(PORT_NUMBER)) {
