@@ -1,4 +1,4 @@
-package client;
+package client.UDP;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -8,7 +8,6 @@ import java.util.Random;
 
 public class UDPWriter {
 
-    private final DatagramSocket socket;
     private final String IMG1
             = "▓▓▓▓\n" +
             "▒▒▒▓▓\n" +
@@ -51,6 +50,8 @@ public class UDPWriter {
             = "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄\n" +
             "█░░░░░░░░▀█▄▀▄▀██████░▀█▄▀▄▀██████\n" +
             "░░░░ ░░░░░░░▀█▄█▄███▀░░░ ▀█▄█▄███\n";
+
+    private final DatagramSocket socket;
 
     public UDPWriter(DatagramSocket socket) {
         this.socket = socket;
