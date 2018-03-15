@@ -5,6 +5,8 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
 
@@ -12,6 +14,7 @@ public class Server {
     private static final int PORT_NUMBER = 12345;
     private static final int MAX_CLIENTS = 2;
     private static final String CLIENTS_LIMIT_ERROR_MSG = "clients limit exceeded";
+    public static final int THREAD_COUNT = 5;
 
     private final List<ClientService> clients;
     private int clientCounter = 0;
@@ -28,15 +31,17 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
              DatagramSocket datagramSocket = new DatagramSocket(PORT_NUMBER)) {
 
+            ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+
             startUDPService(datagramSocket);
 
             while (true) {
 
-                ClientService cs = new ClientService(serverSocket.accept(), clients, clientCounter);
+                ClientService cs = new ClientService(serverSocket.accept(), clients, clientCounter + 1);
 
                 if (clientCounter < MAX_CLIENTS) {
 
-                    new Thread(cs).start();
+                    executorService.submit(cs);
 
                     clientCounter++;
                     clients.add(cs);
